@@ -1,6 +1,24 @@
-/* small custom tweaks */
+/* Glass effect for history box */
 .glass {
-    background: rgba(255,255,255,0.8);
-    backdrop-filter: blur(6px);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px);
+  }
+  
+  /* Custom scroll for history */
+  #historyList {
+    scrollbar-width: thin;
+    scrollbar-color: #059669 #e5e7eb;
+  }
+  
+  #historyList::-webkit-scrollbar {
+    width: 6px;
+  }
+  #historyList::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 8px;
+  }
+  #historyList::-webkit-scrollbar-thumb {
+    background-color: #059669;
+    border-radius: 8px;
   }
   

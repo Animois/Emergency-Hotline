@@ -5,62 +5,61 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Emergency Service Directory</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    /* small custom tweaks */
+    .glass {
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: blur(6px);
+    }
+  </style>
 </head>
 <body class="bg-emerald-50 text-gray-800">
-
   <!-- Header -->
   <header class="bg-white border-b">
     <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-emerald-700 flex items-center justify-center">
-          <img src="assets/logo-dark.png" alt="">
-        </div>
-        <div class="text-emerald-800 font-semibold leading-tight">
-          Emergency <br> Service
+        <div class="w-10 h-10 rounded-full bg-emerald-700 text-white font-bold flex items-center justify-center"><img src="assets/logo-dark.png" alt=""></div>
+        <div>
+          <div class="text-emerald-800 font-semibold">Emergency <br> Service</div>
+          <!-- <div class="text-xs text-gray-500">Government Helplines</div> -->
         </div>
       </div>
 
       <div class="flex items-center gap-4">
-        <div class="flex items-center gap-2 bg-emerald-50 px-3 py-1 rounded-full text-sm">
-          <span>0</span>
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 21.182 4.318 12.682a4.5 4.5 0 010-6.364z" />
-          </svg>
+        <div class="flex items-center gap-3 bg-emerald-50 px-3 py-1 rounded-full">
+          <span class="text-sm">0</span>
+          <img src="assets/heart.png" alt="Heart Icon" class="w-5 h-5 object-contain" />
         </div>
-        <div class="flex items-center gap-2 bg-amber-50 px-3 py-1 rounded-full text-sm">
-          <span>100</span>
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-amber-500" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2l3 7h7l-5.5 4 2 7L12 16 5.5 20l2-7L2 9h7z" />
-          </svg>
+        <div class="flex items-center gap-2 bg-amber-50 px-3 py-1 rounded-full">
+          <span class="text-sm">100</span>
+          <img src="assets/coin.png" alt="Coin Icon" class="w-5 h-5 object-contain" />
         </div>
-        <button class="bg-emerald-600 text-white px-4 py-2 rounded-full text-sm">2 Copy</button>
+        <button class="bg-emerald-600 text-white px-4 py-2 rounded-full">2 Copy</button>
       </div>
     </div>
   </header>
 
   <!-- Hero -->
-  <section class="bg-gradient-to-r from-emerald-900 to-emerald-700 text-white py-10 text-center">
-    <div class="flex items-center justify-center">
-      <div class="w-16 h-16 rounded-full bg-white/20 border-2 border-white flex items-center justify-center">
-        <div class="w-11 h-11 rounded-full bg-emerald-700 flex items-center justify-center">
-          <img src="assets/logo.png" alt="">
+  <section class="bg-gradient-to-r from-emerald-900 to-emerald-700 text-white py-10">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <div class="flex items-center justify-center">
+        <div class="w-16 h-16 rounded-full bg-white/20 border-2 border-white flex items-center justify-center mr-4">
+          <div class="w-11 h-11 rounded-full bg-emerald-700 flex items-center justify-center text-white"><img src="assets/logo.png" alt=""></div>
         </div>
       </div>
+      <h1 class="text-3xl md:text-4xl font-semibold mt-4">Emergency Service Directory</h1>
+      <p class="mt-2 text-sm md:text-base text-emerald-100 max-w-2xl mx-auto">Government Emergency Services at Your Fingertip — A Project by Government of the People's Republic of Bangladesh</p>
     </div>
-    <h1 class="text-3xl md:text-4xl font-semibold mt-4">Emergency Service Directory</h1>
-    <p class="mt-2 text-sm md:text-base text-emerald-100 max-w-2xl mx-auto">
-      Government Emergency Services at Your Fingertip — A Project by Government of the People's Republic of Bangladesh
-    </p>
   </section>
 
   <!-- Main -->
   <main class="max-w-7xl mx-auto px-6 py-8">
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-      <!-- Cards -->
+      <!-- Cards area (spans 3 cols on lg) -->
       <div class="lg:col-span-3">
         <div id="cardsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
       </div>
+
       <!-- Sidebar -->
       <aside class="lg:col-span-1">
         <div class="bg-white rounded-xl p-4 shadow glass">
@@ -74,6 +73,10 @@
     </div>
   </main>
 
-  <script src="script.js"></script>
+
+  <script src="script.js">
+  </script>
+
+
 </body>
 </html>

@@ -1,3 +1,4 @@
+// Data for cards (from screenshot)
 const services = [
     { id: 1, title: 'National Emergency Number', subtitle: 'National Emergency', number: '999', tag: 'All', icon: 'alarm' },
     { id: 2, title: 'Police Helpline Number', subtitle: 'Police', number: '999', tag: 'Police', icon: 'shield' },
@@ -9,13 +10,14 @@ const services = [
     { id: 8, title: 'Brac Helpline', subtitle: 'Brac', number: '16445', tag: 'NGO', icon: 'org' },
     { id: 9, title: 'Bangladesh Railway Helpline', subtitle: 'Bangladesh Railway', number: '163', tag: 'Travel', icon: 'train' }
   ];
-  
+
   const cardsGrid = document.getElementById('cardsGrid');
   const historyList = document.getElementById('historyList');
   const clearHistoryBtn = document.getElementById('clearHistory');
-  
+
+  // load history from localStorage
   let callHistory = JSON.parse(localStorage.getItem('callHistoryEmergency') || '[]');
-  
+
   function renderCards() {
     cardsGrid.innerHTML = services.map(s => `
       <div class="bg-white rounded-xl p-5 shadow border border-emerald-50 relative">
@@ -24,6 +26,7 @@ const services = [
             <div class="w-12 h-12 rounded-lg bg-pink-50 flex items-center justify-center">
               ${getIconSvg(s.icon)}
             </div>
+            
             <div>
               <h4 class="font-semibold text-sm">${s.title}</h4>
               <p class="text-xs text-gray-400">${s.subtitle}</p>
@@ -35,39 +38,52 @@ const services = [
             </svg>
           </button>
         </div>
-  
+
         <div class="mt-4">
           <div class="text-2xl font-bold">${s.number}</div>
           <div class="mt-2"><span class="text-xs bg-gray-100 px-2 py-1 rounded-full">${s.tag}</span></div>
         </div>
-  
+
         <div class="mt-4 flex items-center gap-3">
-          <button class="btn-copy flex-1 py-2 px-3 border rounded-full text-sm" data-number="${s.number}">Copy</button>
+          <button class="btn-copy flex-1 py-2 px-3 border rounded-full text-sm" data-number="${s.number}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 inline-block mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h11a2 2 0 002-2v-3"></path><rect x="8" y="3" width="13" height="13" rx="2" ry="2"></rect></svg>
+            Copy
+          </button>
           <button class="btn-call bg-emerald-600 text-white px-4 py-2 rounded-full text-sm" data-number="${s.number}">Call</button>
         </div>
       </div>
     `).join('');
   }
-  
+
   function getIconSvg(name) {
-    let src = '';
-    switch(name) {
-      case 'shield': src = 'assets/police.png'; break;
-      case 'fire': src = 'assets/fire-service.png'; break;
-      case 'ambulance': src = 'assets/ambulance.png'; break;
-      case 'help': src = 'assets/help.png'; break;
-      case 'gov': src = 'assets/gov.png'; break;
-      case 'bolt': src = 'assets/bolt.png'; break;
-      case 'org': src = 'assets/org.png'; break;
-      case 'train': src = 'assets/train.png'; break;
-      default: src = 'assets/default.png'; break;
+    const basePath = "assets"; // folder path
+  
+    switch (name) {
+      case "shield":
+        return `<img src="${basePath}/police.png" alt="shield" class="w-6 h-6">`;
+      case "fire":
+        return `<img src="${basePath}/fire-service.png" alt="fire" class="w-6 h-6">`;
+      case "ambulance":
+        return `<img src="${basePath}/ambulance.png" alt="ambulance" class="w-6 h-6">`;
+      case "help":
+        return `<img src="${basePath}/emergency.png" alt="help" class="w-6 h-6">`;
+      case "gov":
+        return `<img src="${basePath}/emergency.png" alt="gov" class="w-6 h-6">`;
+      case "bolt":
+        return `<img src="${basePath}/emergency.png" alt="bolt" class="w-6 h-6">`;
+      case "org":
+        return `<img src="${basePath}/brac.png" alt="org" class="w-6 h-6">`;
+      case "train":
+        return `<img src="${basePath}/Bangladesh-Railway.png" alt="train" class="w-6 h-6">`;
+      default:
+        return `<img src="${basePath}/emergency.png" alt="default" class="w-6 h-6">`;
     }
-    return `<img src="${src}" alt="${name}" class="w-6 h-6 object-contain">`;
   }
   
-  
+
+  // History rendering
   function renderHistory() {
-    if(!callHistory.length){
+    if (!callHistory.length) {
       historyList.innerHTML = '<li class="text-sm text-gray-400">No calls yet</li>';
       return;
     }
@@ -80,62 +96,74 @@ const services = [
       </li>
     `).join('');
   }
-  
-  function addToHistory(service){
+
+  function addToHistory(service) {
     const now = new Date();
-    const time = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
-    callHistory.push({id:service.id,title:service.title,number:service.number,time});
-    if(callHistory.length>50) callHistory.shift();
+    const time = now.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', second: '2-digit'});
+    callHistory.push({ id: service.id, title: service.title, number: service.number, time });
+    // keep only last 50
+    if (callHistory.length > 50) callHistory.shift();
     localStorage.setItem('callHistoryEmergency', JSON.stringify(callHistory));
     renderHistory();
   }
-  
-  // Event delegation
-  document.addEventListener('click',(e)=>{
+
+  // Event delegation for buttons
+  document.addEventListener('click', (e) => {
     const copyBtn = e.target.closest('.btn-copy');
     const callBtn = e.target.closest('.btn-call');
     const heartBtn = e.target.closest('.btn-heart');
-  
-    if(copyBtn){
+
+    if (copyBtn) {
       const num = copyBtn.dataset.number;
-      navigator.clipboard.writeText(num).then(()=>{
+      navigator.clipboard.writeText(num).then(() => {
+        // small feedback
         copyBtn.innerHTML = 'Copied';
-        setTimeout(()=>copyBtn.innerHTML='Copy',1000);
-      }).catch(()=>alert('Copy failed'));
+        setTimeout(() => copyBtn.innerHTML = 'Copy', 1000);
+      }).catch(() => alert('Copy failed'));
     }
-  
-    if(callBtn){
+
+    if (callBtn) {
       const num = callBtn.dataset.number;
-      const svc = services.find(s=>s.number===num||s.number.replace(/-/g,'')===num.replace(/-/g,''));
-      if(svc) addToHistory(svc);
-      window.open('tel:'+num);
+      // find service meta
+      const svc = services.find(s => s.number === num || s.number.replace(/-/g,'') === num.replace(/-/g,''));
+      if (svc) addToHistory(svc);
+      // try to initiate tel: (works on mobile)
+      window.open('tel:' + num);
     }
-  
-    if(heartBtn){
+
+    if (heartBtn) {
       const id = heartBtn.dataset.id;
       heartBtn.classList.toggle('text-red-500');
       heartBtn.classList.toggle('text-gray-300');
-      let favs = JSON.parse(localStorage.getItem('favoritesEmergency')||'[]');
-      if(favs.includes(id)) favs=favs.filter(x=>x!==id); else favs.push(id);
+      // simple localStorage favorites
+      let favs = JSON.parse(localStorage.getItem('favoritesEmergency') || '[]');
+      if (favs.includes(id)) {
+        favs = favs.filter(x => x !== id);
+      } else {
+        favs.push(id);
+      }
       localStorage.setItem('favoritesEmergency', JSON.stringify(favs));
     }
   });
-  
-  clearHistoryBtn.addEventListener('click',()=>{
-    callHistory=[];
+
+  clearHistoryBtn.addEventListener('click', () => {
+    callHistory = [];
     localStorage.removeItem('callHistoryEmergency');
     renderHistory();
   });
-  
+
+  // initial render
   renderCards();
   renderHistory();
-  
+
   // restore favorites look
   (function applyFavs(){
-    const favs = JSON.parse(localStorage.getItem('favoritesEmergency')||'[]');
-    favs.forEach(id=>{
+    const favs = JSON.parse(localStorage.getItem('favoritesEmergency') || '[]');
+    favs.forEach(id => {
       const btn = document.querySelector(`.btn-heart[data-id='${id}']`);
-      if(btn){ btn.classList.remove('text-gray-300'); btn.classList.add('text-red-500'); }
+      if (btn) {
+        btn.classList.remove('text-gray-300');
+        btn.classList.add('text-red-500');
+      }
     });
   })();
-  
