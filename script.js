@@ -49,19 +49,22 @@ const services = [
     `).join('');
   }
   
-  function getIconSvg(name){
-    switch(name){
-      case 'shield': return `<svg class='w-6 h-6 text-emerald-600' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M12 2l7 4v6c0 5-4 9-7 11-3-2-7-6-7-11V6l7-4z'/></svg>`;
-      case 'fire': return `<svg class='w-6 h-6 text-red-500' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M12 2s4 4 4 8a4 4 0 11-8 0c0-4 4-8 4-8z'/></svg>`;
-      case 'ambulance': return `<svg class='w-6 h-6 text-pink-600' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M3 7h13v10H3zM7 21v-3M17 21v-3'/></svg>`;
-      case 'help': return `<svg class='w-6 h-6 text-emerald-600' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M12 8a4 4 0 10-4 4'/></svg>`;
-      case 'gov': return `<svg class='w-6 h-6 text-emerald-600' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M12 2v20M6 7h12'/></svg>`;
-      case 'bolt': return `<svg class='w-6 h-6 text-yellow-500' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M13 2L3 14h9l-1 8 10-12h-9l1-8z'/></svg>`;
-      case 'org': return `<svg class='w-6 h-6 text-emerald-600' viewBox='0 0 24 24'><circle cx='12' cy='8' r='3'/><path d='M6 20v-2a4 4 0 014-4h4a4 4 0 014 4v2'/></svg>`;
-      case 'train': return `<svg class='w-6 h-6 text-emerald-600' viewBox='0 0 24 24'><rect x='3' y='5' width='18' height='11' rx='2'/><path d='M7 16v3M17 16v3'/></svg>`;
-      default: return `<svg class='w-6 h-6 text-emerald-600' fill='none' stroke='currentColor' viewBox='0 0 24 24'><circle cx='12' cy='12' r='8'/></svg>`;
+  function getIconSvg(name) {
+    let src = '';
+    switch(name) {
+      case 'shield': src = 'assets/police.png'; break;
+      case 'fire': src = 'assets/fire-service.png'; break;
+      case 'ambulance': src = 'assets/ambulance.png'; break;
+      case 'help': src = 'assets/help.png'; break;
+      case 'gov': src = 'assets/gov.png'; break;
+      case 'bolt': src = 'assets/bolt.png'; break;
+      case 'org': src = 'assets/org.png'; break;
+      case 'train': src = 'assets/train.png'; break;
+      default: src = 'assets/default.png'; break;
     }
+    return `<img src="${src}" alt="${name}" class="w-6 h-6 object-contain">`;
   }
+  
   
   function renderHistory() {
     if(!callHistory.length){

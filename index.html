@@ -1,245 +1,3 @@
-<!-- <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Emergency Service Directory</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* small custom tweaks */
-    .glass {
-      background: rgba(255,255,255,0.8);
-      backdrop-filter: blur(6px);
-    }
-  </style>
-</head>
-<body class="bg-emerald-50 text-gray-800">
-  <!-- Header -->
-  <header class="bg-white border-b">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-emerald-700 text-white font-bold flex items-center justify-center"><img src="assets/logo-dark.png" alt=""></div>
-        <div>
-          <div class="text-emerald-800 font-semibold">Emergency <br> Service</div>
-          <!-- <div class="text-xs text-gray-500">Government Helplines</div> -->
-        </div>
-      </div>
-
-      <div class="flex items-center gap-4">
-        <div class="flex items-center gap-3 bg-emerald-50 px-3 py-1 rounded-full">
-          <span class="text-sm">0</span>
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 21.182 4.318 12.682a4.5 4.5 0 010-6.364z" />
-          </svg>
-        </div>
-        <div class="flex items-center gap-2 bg-amber-50 px-3 py-1 rounded-full">
-          <span class="text-sm">100</span>
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-amber-500" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2l3 7h7l-5.5 4 2 7L12 16 5.5 20l2-7L2 9h7z" />
-          </svg>
-        </div>
-        <button class="bg-emerald-600 text-white px-4 py-2 rounded-full">2 Copy</button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Hero -->
-  <section class="bg-gradient-to-r from-emerald-900 to-emerald-700 text-white py-10">
-    <div class="max-w-7xl mx-auto px-6 text-center">
-      <div class="flex items-center justify-center">
-        <div class="w-16 h-16 rounded-full bg-white/20 border-2 border-white flex items-center justify-center mr-4">
-          <div class="w-11 h-11 rounded-full bg-emerald-700 flex items-center justify-center text-white"><img src="assets/logo.png" alt=""></div>
-        </div>
-      </div>
-      <h1 class="text-3xl md:text-4xl font-semibold mt-4">Emergency Service Directory</h1>
-      <p class="mt-2 text-sm md:text-base text-emerald-100 max-w-2xl mx-auto">Government Emergency Services at Your Fingertip — A Project by Government of the People's Republic of Bangladesh</p>
-    </div>
-  </section>
-
-  <!-- Main -->
-  <main class="max-w-7xl mx-auto px-6 py-8">
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-      <!-- Cards area (spans 3 cols on lg) -->
-      <div class="lg:col-span-3">
-        <div id="cardsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-      </div>
-
-      <!-- Sidebar -->
-      <aside class="lg:col-span-1">
-        <div class="bg-white rounded-xl p-4 shadow glass">
-          <div class="flex items-center justify-between mb-3">
-            <h3 class="font-semibold">Call History</h3>
-            <button id="clearHistory" class="text-sm text-emerald-600 px-3 py-1 border border-emerald-100 rounded-full">Clear</button>
-          </div>
-          <ul id="historyList" class="space-y-3 max-h-[72vh] overflow-auto -mr-2 pr-2"></ul>
-        </div>
-      </aside>
-    </div>
-  </main>
-
-  <!-- Template Card (hidden) -->
-
-  <script>
-    // Data for cards (from screenshot)
-    const services = [
-      { id: 1, title: 'National Emergency Number', subtitle: 'National Emergency', number: '999', tag: 'All', icon: 'alarm' },
-      { id: 2, title: 'Police Helpline Number', subtitle: 'Police', number: '999', tag: 'Police', icon: 'shield' },
-      { id: 3, title: 'Fire Service Number', subtitle: 'Fire Service', number: '999', tag: 'Fire', icon: 'fire' },
-      { id: 4, title: 'Ambulance Service', subtitle: 'Ambulance', number: '1994-999999', tag: 'Health', icon: 'ambulance' },
-      { id: 5, title: 'Women & Child Helpline', subtitle: 'Women & Child Helpline', number: '109', tag: 'Help', icon: 'help' },
-      { id: 6, title: 'Anti-Corruption Helpline', subtitle: 'Anti-Corruption', number: '106', tag: 'Govt.', icon: 'gov' },
-      { id: 7, title: 'Electricity Helpline', subtitle: 'Electricity Outage', number: '16216', tag: 'Electricity', icon: 'bolt' },
-      { id: 8, title: 'Brac Helpline', subtitle: 'Brac', number: '16445', tag: 'NGO', icon: 'org' },
-      { id: 9, title: 'Bangladesh Railway Helpline', subtitle: 'Bangladesh Railway', number: '163', tag: 'Travel', icon: 'train' }
-    ];
-
-    const cardsGrid = document.getElementById('cardsGrid');
-    const historyList = document.getElementById('historyList');
-    const clearHistoryBtn = document.getElementById('clearHistory');
-
-    // load history from localStorage
-    let callHistory = JSON.parse(localStorage.getItem('callHistoryEmergency') || '[]');
-
-    function renderCards() {
-      cardsGrid.innerHTML = services.map(s => `
-        <div class="bg-white rounded-xl p-5 shadow border border-emerald-50 relative">
-          <div class="flex justify-between items-start">
-            <div class="flex items-center gap-3">
-              <div class="w-12 h-12 rounded-lg bg-pink-50 flex items-center justify-center">
-                ${getIconSvg(s.icon)}
-              </div>
-              <div>
-                <h4 class="font-semibold text-sm">${s.title}</h4>
-                <p class="text-xs text-gray-400">${s.subtitle}</p>
-              </div>
-            </div>
-            <button class="btn-heart text-gray-300 hover:text-red-500" data-id="${s.id}" aria-label="favorite">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 21.182 4.318 12.682a4.5 4.5 0 010-6.364z"></path>
-              </svg>
-            </button>
-          </div>
-
-          <div class="mt-4">
-            <div class="text-2xl font-bold">${s.number}</div>
-            <div class="mt-2"><span class="text-xs bg-gray-100 px-2 py-1 rounded-full">${s.tag}</span></div>
-          </div>
-
-          <div class="mt-4 flex items-center gap-3">
-            <button class="btn-copy flex-1 py-2 px-3 border rounded-full text-sm" data-number="${s.number}">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 inline-block mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h11a2 2 0 002-2v-3"></path><rect x="8" y="3" width="13" height="13" rx="2" ry="2"></rect></svg>
-              Copy
-            </button>
-            <button class="btn-call bg-emerald-600 text-white px-4 py-2 rounded-full text-sm" data-number="${s.number}">Call</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function getIconSvg(name) {
-      // small set of icons by name
-      switch(name) {
-        case 'shield': return `<svg xmlns='http://www.w3.org/2000/svg' class='w-6 h-6 text-emerald-600' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M12 2l7 4v6c0 5-4 9-7 11-3-2-7-6-7-11V6l7-4z' /></svg>`;
-        case 'fire': return `<svg xmlns='http://www.w3.org/2000/svg' class='w-6 h-6 text-red-500' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M12 2s4 4 4 8a4 4 0 11-8 0c0-4 4-8 4-8z' /></svg>`;
-        case 'ambulance': return `<svg xmlns='http://www.w3.org/2000/svg' class='w-6 h-6 text-pink-600' viewBox='0 0 24 24' fill='none' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M3 7h13v10H3zM7 21v-3M17 21v-3' /></svg>`;
-        case 'help': return `<svg xmlns='http://www.w3.org/2000/svg' class='w-6 h-6 text-emerald-600' viewBox='0 0 24 24' fill='none' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M12 8a4 4 0 10-4 4' /></svg>`;
-        case 'gov': return `<svg xmlns='http://www.w3.org/2000/svg' class='w-6 h-6 text-emerald-600' viewBox='0 0 24 24' fill='none' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M12 2v20M6 7h12' /></svg>`;
-        case 'bolt': return `<svg xmlns='http://www.w3.org/2000/svg' class='w-6 h-6 text-yellow-500' viewBox='0 0 24 24' fill='none' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M13 2L3 14h9l-1 8 10-12h-9l1-8z' /></svg>`;
-        case 'org': return `<svg xmlns='http://www.w3.org/2000/svg' class='w-6 h-6 text-emerald-600' viewBox='0 0 24 24' fill='none' stroke='currentColor'><circle cx='12' cy='8' r='3' /><path d='M6 20v-2a4 4 0 014-4h4a4 4 0 014 4v2' /></svg>`;
-        case 'train': return `<svg xmlns='http://www.w3.org/2000/svg' class='w-6 h-6 text-emerald-600' viewBox='0 0 24 24' fill='none' stroke='currentColor'><rect x='3' y='5' width='18' height='11' rx='2'/><path d='M7 16v3M17 16v3' /></svg>`;
-        default: return `<svg xmlns='http://www.w3.org/2000/svg' class='w-6 h-6 text-emerald-600' fill='none' viewBox='0 0 24 24' stroke='currentColor'><circle cx='12' cy='12' r='8' /></svg>`;
-      }
-    }
-
-    // History rendering
-    function renderHistory() {
-      if (!callHistory.length) {
-        historyList.innerHTML = '<li class="text-sm text-gray-400">No calls yet</li>';
-        return;
-      }
-      historyList.innerHTML = callHistory.slice().reverse().map(h => `
-        <li class="bg-gray-50 p-3 rounded-md flex items-center justify-between">
-          <div>
-            <div class="text-sm font-medium">${h.title}</div>
-            <div class="text-xs text-gray-500">${h.number} • ${h.time}</div>
-          </div>
-        </li>
-      `).join('');
-    }
-
-    function addToHistory(service) {
-      const now = new Date();
-      const time = now.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', second: '2-digit'});
-      callHistory.push({ id: service.id, title: service.title, number: service.number, time });
-      // keep only last 50
-      if (callHistory.length > 50) callHistory.shift();
-      localStorage.setItem('callHistoryEmergency', JSON.stringify(callHistory));
-      renderHistory();
-    }
-
-    // Event delegation for buttons
-    document.addEventListener('click', (e) => {
-      const copyBtn = e.target.closest('.btn-copy');
-      const callBtn = e.target.closest('.btn-call');
-      const heartBtn = e.target.closest('.btn-heart');
-
-      if (copyBtn) {
-        const num = copyBtn.dataset.number;
-        navigator.clipboard.writeText(num).then(() => {
-          // small feedback
-          copyBtn.innerHTML = 'Copied';
-          setTimeout(() => copyBtn.innerHTML = 'Copy', 1000);
-        }).catch(() => alert('Copy failed'));
-      }
-
-      if (callBtn) {
-        const num = callBtn.dataset.number;
-        // find service meta
-        const svc = services.find(s => s.number === num || s.number.replace(/-/g,'') === num.replace(/-/g,''));
-        if (svc) addToHistory(svc);
-        // try to initiate tel: (works on mobile)
-        window.open('tel:' + num);
-      }
-
-      if (heartBtn) {
-        const id = heartBtn.dataset.id;
-        heartBtn.classList.toggle('text-red-500');
-        heartBtn.classList.toggle('text-gray-300');
-        // simple localStorage favorites
-        let favs = JSON.parse(localStorage.getItem('favoritesEmergency') || '[]');
-        if (favs.includes(id)) {
-          favs = favs.filter(x => x !== id);
-        } else {
-          favs.push(id);
-        }
-        localStorage.setItem('favoritesEmergency', JSON.stringify(favs));
-      }
-    });
-
-    clearHistoryBtn.addEventListener('click', () => {
-      callHistory = [];
-      localStorage.removeItem('callHistoryEmergency');
-      renderHistory();
-    });
-
-    // initial render
-    renderCards();
-    renderHistory();
-
-    // restore favorites look
-    (function applyFavs(){
-      const favs = JSON.parse(localStorage.getItem('favoritesEmergency') || '[]');
-      favs.forEach(id => {
-        const btn = document.querySelector(`.btn-heart[data-id='${id}']`);
-        if (btn) {
-          btn.classList.remove('text-gray-300');
-          btn.classList.add('text-red-500');
-        }
-      });
-    })();
-  </script>
-</body>
-</html> -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -250,60 +8,60 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-emerald-50 text-gray-800">
+
   <!-- Header -->
   <header class="bg-white border-b">
     <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-emerald-700 text-white font-bold flex items-center justify-center">
+        <div class="w-10 h-10 rounded-full bg-emerald-700 flex items-center justify-center">
           <img src="assets/logo-dark.png" alt="">
         </div>
-        <div>
-          <div class="text-emerald-800 font-semibold">Emergency <br> Service</div>
+        <div class="text-emerald-800 font-semibold leading-tight">
+          Emergency <br> Service
         </div>
       </div>
 
       <div class="flex items-center gap-4">
-        <div class="flex items-center gap-3 bg-emerald-50 px-3 py-1 rounded-full">
-          <span class="text-sm">0</span>
+        <div class="flex items-center gap-2 bg-emerald-50 px-3 py-1 rounded-full text-sm">
+          <span>0</span>
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 21.182 4.318 12.682a4.5 4.5 0 010-6.364z" />
           </svg>
         </div>
-        <div class="flex items-center gap-2 bg-amber-50 px-3 py-1 rounded-full">
-          <span class="text-sm">100</span>
+        <div class="flex items-center gap-2 bg-amber-50 px-3 py-1 rounded-full text-sm">
+          <span>100</span>
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-amber-500" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 2l3 7h7l-5.5 4 2 7L12 16 5.5 20l2-7L2 9h7z" />
           </svg>
         </div>
-        <button class="bg-emerald-600 text-white px-4 py-2 rounded-full">2 Copy</button>
+        <button class="bg-emerald-600 text-white px-4 py-2 rounded-full text-sm">2 Copy</button>
       </div>
     </div>
   </header>
 
   <!-- Hero -->
-  <section class="bg-gradient-to-r from-emerald-900 to-emerald-700 text-white py-10">
-    <div class="max-w-7xl mx-auto px-6 text-center">
-      <div class="flex items-center justify-center">
-        <div class="w-16 h-16 rounded-full bg-white/20 border-2 border-white flex items-center justify-center mr-4">
-          <div class="w-11 h-11 rounded-full bg-emerald-700 flex items-center justify-center text-white">
-            <img src="assets/logo.png" alt="">
-          </div>
+  <section class="bg-gradient-to-r from-emerald-900 to-emerald-700 text-white py-10 text-center">
+    <div class="flex items-center justify-center">
+      <div class="w-16 h-16 rounded-full bg-white/20 border-2 border-white flex items-center justify-center">
+        <div class="w-11 h-11 rounded-full bg-emerald-700 flex items-center justify-center">
+          <img src="assets/logo.png" alt="">
         </div>
       </div>
-      <h1 class="text-3xl md:text-4xl font-semibold mt-4">Emergency Service Directory</h1>
-      <p class="mt-2 text-sm md:text-base text-emerald-100 max-w-2xl mx-auto">
-        Government Emergency Services at Your Fingertip — A Project by Government of the People's Republic of Bangladesh
-      </p>
     </div>
+    <h1 class="text-3xl md:text-4xl font-semibold mt-4">Emergency Service Directory</h1>
+    <p class="mt-2 text-sm md:text-base text-emerald-100 max-w-2xl mx-auto">
+      Government Emergency Services at Your Fingertip — A Project by Government of the People's Republic of Bangladesh
+    </p>
   </section>
 
   <!-- Main -->
   <main class="max-w-7xl mx-auto px-6 py-8">
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <!-- Cards -->
       <div class="lg:col-span-3">
         <div id="cardsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
       </div>
-
+      <!-- Sidebar -->
       <aside class="lg:col-span-1">
         <div class="bg-white rounded-xl p-4 shadow glass">
           <div class="flex items-center justify-between mb-3">
